@@ -33,10 +33,10 @@ $(document).ready(function () {
         if (Cookies.get("'"+username+"'") == undefined) {
             loggedInUser = new user(username, password);
             Cookies.set("'"+username+"'", loggedInUser);
-            window.location.href = "#close";
+            $('#openModal').toggleClass("modalDialog-show");
         } else {
             loggedInUser = Cookies.getJSON("'"+username+"'");
-            window.location.href = "#close";
+            $('#openModal').toggleClass("modalDialog-show");
         }
         $('#login').text(username);
         $('canvas').drawText({
