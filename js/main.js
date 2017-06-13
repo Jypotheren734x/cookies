@@ -11,13 +11,14 @@ var user = function(u, p) {
     };
 };
 var loggedInUser = undefined;
+var canvas = undefined;
 $(document).ready(function () {
-    let $canvas = $('canvas');
-    for(i = 1; i<8;i++) {
-        drawImage('img/cookies/'+i+'.png');
+    canvas = $('canvas');
+    for(i = 1; i<35;i++) {
+        drawImage(i);
     }
-    $canvas.drawLayers();
-    $canvas.getLayer('img/cookies/1.png').visible = true;
+    canvas.drawLayers();
+    canvas.getLayer(0).visible=true;
     $('#login').click(function() {
         $('#openModal').toggleClass("modalDialog-show");
     });
@@ -37,20 +38,56 @@ $(document).ready(function () {
             loggedInUser = Cookies.getJSON("'"+username+"'");
             window.location.href = "#close";
         }
+        $('#login').text(username);
+        $('canvas').drawText({
+            fillStyle: '#c33',
+            fontFamily: 'Ubuntu, sans-serif',
+            fontSize: 18,
+            text: "Sugar: " + loggedInUser.cookies.sugar + "\nChocolate: " + loggedInUser.cookies.chocolate + "\nLemon: " + loggedInUser.cookies.lemon,
+            x: 50, y: 50,
+            letterSpacing: 0.02
+        });
     });
     function drawImage(src) {
-        $canvas.drawImage({
-            source: src,
-            name: src,
+        canvas.drawImage({
+            source: 'img/cookies/'+src+'.png',
+            name: "Cookie"+src,
             visible: false,
-            x: 250, y: 100,
+            x: 150, y: 150,
             fromCenter: false,
             shadowColor: '#222',
             shadowBlur: 3,
-            rotate: 40,
             layer: true,
+            width: 300,
+            height: 300,
             click: function (layer) {
                 console.log("click");
+                layer.visible = false;
+                switch (src) {
+                    case 7:
+                        loggedInUser.cookies.chocolate++;
+                        break;
+                    case 11:
+                        loggedInUser.cookies.lemon++;
+                        break;
+                    case 34:
+                        loggedInUser.cookies.sugar++;
+                        break;
+                }
+                if(canvas.getLayer("Cookie" + (src+1)) != undefined) {
+                    canvas.getLayer("Cookie" + (src + 1)).visible = true;
+                }else{
+                    Cookies.set("'"+loggedInUser.username+"'", loggedInUser);
+                    canvas.getLayer("Cookie1").visible = true;
+                }
+                $('canvas').drawText({
+                    fillStyle: '#c33',
+                    fontFamily: 'Ubuntu, sans-serif',
+                    fontSize: 18,
+                    text: "Sugar: " + loggedInUser.cookies.sugar + "\nChocolate: " + loggedInUser.cookies.chocolate + "\nLemon: " + loggedInUser.cookies.lemon,
+                    x: 50, y: 50,
+                    letterSpacing: 0.02
+                });
             }
         });
     }
