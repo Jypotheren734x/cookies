@@ -10,7 +10,7 @@ var user = function(u, p) {
         lemon: 0
     };
 };
-var loggedInUser = undefined;
+var loggedInUser = new user('Guest', "");
 var canvas = undefined;
 $(document).ready(function () {
     canvas = $('canvas');
